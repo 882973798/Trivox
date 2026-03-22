@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivox | Step Beyond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff4500; 
+            --dark-color: #121212;
+            --light-color: #f4f4f4;
+            --white: #ffffff;
+            --whatsapp-color: #25d366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+
+        /* --- NAVEGACIÓN --- */
+        header {
+            background-color: var(--dark-color);
+            color: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--primary-color); }
+
+        nav ul { list-style: none; display: flex; gap: 2rem; }
+
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover { color: var(--primary-color); }
+
+        .cart-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+
+        .cart-btn:active { transform: scale(0.95); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=1920&q=80') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero h1 { font-size: 3.5rem; font-weight: 900; text-transform: uppercase; }
+        .hero p { font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 20px; }
+
+        /* --- PRODUCTOS --- */
+        .productos { padding: 4rem 5%; text-align: center; }
+        .section-title { font-size: 2rem; margin-bottom: 2rem; text-transform: uppercase; font-weight: 900; }
+
+        .prod-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .prod-card {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .prod-card:hover { transform: translateY(-5px); }
+
+        .prod-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 8px; }
+
+        .prod-card h4 { margin: 15px 0 5px; font-size: 1.1rem; }
+
+        .price { font-weight: 700; color: var(--primary-color); font-size: 1.2rem; margin-bottom: 15px; }
+
+        .btn-add {
+            width: 100%;
+            padding: 12px;
+            background: var(--dark-color);
+            color: var(--white);
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover { background: var(--primary-color); }
+
+        /* --- MODAL DEL CARRITO --- */
+        .modal-carrito {
+            display: none; 
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            text-align: center;
+        }
+
+        .cerrar-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .lista-carrito {
+            margin: 20px 0;
+            text-align: left;
+            max-height: 250px;
+            overflow-y: auto;
+            border-top: 1px solid #eee;
+        }
+
+        .item-carrito {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .total-container {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-whatsapp-checkout {
+            background-color: var(--whatsapp-color);
+            color: white;
+            padding: 16px;
+            text-decoration: none;
+            font-weight: 700;
+            display: block;
+            border-radius: 8px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .btn-whatsapp-checkout:hover { background-color: #128c7e; }
+
+        footer { background: var(--dark-color); color: white; padding: 2rem; text-align: center; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">TRI<span>VOX</span></a>
+        <nav>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#productos">Productos</a></li>
+            </ul>
+        </nav>
+        <button class="cart-btn" onclick="abrirCarrito()">CARRITO (0)</button>
+    </header>
+
+    <section class="hero">
+        <p>STEP BEYOND</p>
+        <h1>TRIVOX SPORTS</h1>
+    </section>
+
+    <section id="productos" class="productos">
+        <h2 class="section-title">Nuestra Colección</h2>
+        <div class="prod-grid">
+            <div class="prod-card">
+                <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=500&q=80" alt="Trivox Runner X1">
+                <h4>Trivox Runner X1</h4>
+                <div class="price">S/ 349.00</div>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+            <div class="prod-card">
+                <img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?auto=format&fit=crop&w=500&q=80" alt="Camiseta DryFit Step">
+                <h4>Camiseta DryFit Step</h4>
+                <div class="price">S/ 89.00</div>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+            <div class="prod-card">
+                <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=500&q=80" alt="Trivox Urban V2">
+                <h4>Trivox Urban V2</h4>
+                <div class="price">S/ 299.00</div>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+            <div class="prod-card">
+                <img src="https://images.unsplash.com/photo-1512413914619-7d083167eb1c?auto=format&fit=crop&w=500&q=80" alt="Short Training Pro">
+                <h4>Short Training Pro</h4>
+                <div class="price">S/ 119.00</div>
+                <button class="btn-add">Añadir al carrito</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="miCarrito" class="modal-carrito">
+        <div class="modal-content">
+            <span class="cerrar-modal" onclick="cerrarCarrito()">&times;</span>
+            <h2 style="margin-bottom:10px;">Tu Pedido</h2>
+            <p style="font-size: 0.8rem; color: #666;">Confirma tu pedido para coordinar el pago contraentrega.</p>
+            
+            <div id="lista-items" class="lista-carrito">
+                </div>
+
+            <div class="total-container">
+                <span>Total:</span>
+                <span>S/ <span id="total-precio">0.00</span></span>
+            </div>
+
+            <a href="#" id="enviar-whatsapp" class="btn-whatsapp-checkout" target="_blank">
+                Finalizar Pedido por WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>TRI<span>VOX</span> | Step Beyond</p>
+        <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 10px;">&copy; 2026 Trujillo, Perú.</p>
+    </footer>
+
+    <script>
+        let carrito = [];
+        const listaHtml = document.getElementById('lista-items');
+        const totalHtml = document.getElementById('total-precio');
+        const btnCartHeader = document.querySelector('.cart-btn');
+
+        // Escuchar clics en botones de "Añadir"
+        document.querySelectorAll('.btn-add').forEach(boton => {
+            boton.addEventListener('click', (e) => {
+                const card = e.target.closest('.prod-card');
+                const nombre = card.querySelector('h4').textContent;
+                const precioTexto = card.querySelector('.price').textContent;
+                const precio = parseFloat(precioTexto.replace('S/ ', ''));
+
+                carrito.push({ nombre, precio });
+                actualizarInterfaz();
+                
+                // Efecto visual rápido
+                boton.textContent = "¡Agregado!";
+                setTimeout(() => boton.textContent = "Añadir al carrito", 1000);
+            });
+        });
+
+        function actualizarInterfaz() {
+            btnCartHeader.textContent = `CARRITO (${carrito.length})`;
+            listaHtml.innerHTML = '';
+            let total = 0;
+            let listaTextoWa = "";
+
+            if(carrito.length === 0) {
+                listaHtml.innerHTML = '<p style="text-align:center; padding: 20px; color: #999;">Tu carrito está vacío</p>';
+            }
+
+            carrito.forEach((item) => {
+                listaHtml.innerHTML += `
+                    <div class="item-carrito">
+                        <span>${item.nombre}</span>
+                        <strong>S/ ${item.precio.toFixed(2)}</strong>
+                    </div>`;
+                total += item.precio;
+                listaTextoWa += `- ${item.nombre} (S/ ${item.precio.toFixed(2)})%0A`;
+            });
+
+            totalHtml.textContent = total.toFixed(2);
+
+            // CONFIGURACIÓN DE WHATSAPP
+            const numero = "51908708157"; // <--- REEMPLAZA ESTE NÚMERO
+            const mensaje = `¡Hola Trivox! 👋%0AQuiero realizar un pedido contraentrega de los siguientes productos:%0A%0A${listaTextoWa}%0A*Total a pagar: S/ ${total.toFixed(2)}*%0A%0A¿Me podrían confirmar la disponibilidad para coordinar la entrega?`;
+            
+            document.getElementById('enviar-whatsapp').href = `https://wa.me/${numero}?text=${mensaje}`;
+        }
+
+        function abrirCarrito() {
+            document.getElementById('miCarrito').style.display = 'flex';
+        }
+
+        function cerrarCarrito() {
+            document.getElementById('miCarrito').style.display = 'none';
+        }
+
+        // Cerrar si hacen clic fuera del cuadro blanco
+        window.onclick = function(event) {
+            const modal = document.getElementById('miCarrito');
+            if (event.target == modal) cerrarCarrito();
+        }
+    </script>
+</body>
+</html>
